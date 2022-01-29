@@ -1,7 +1,6 @@
 const Discord = require('discord.js');
 const {
-    prefix,
-    TOKEN
+    prefix
 } = require('./config.json');
 const ytdl = require('ytdl-core');
 const client = new Discord.Client();
@@ -219,4 +218,4 @@ function randomRec(){
 
 
 
-client.login(TOKEN);
+client.login(process.env.DJS_TOKEN);
