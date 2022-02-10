@@ -1,7 +1,10 @@
 const Discord = require('discord.js');
 const {
-    prefix
+    prefix,
+    recommendations
 } = require('./config.json');
+const { MessageEmbed } = require('discord.js');
+
 const ytdl = require('ytdl-core');
 const client = new Discord.Client();
 
@@ -54,6 +57,9 @@ client.on('message', async message => {
     } else if (message.content.startsWith(`${prefix}move`)) {
         move(message, serverQueue)
         return
+    }
+    if (message.content.startsWith(`${prefix}embed`)){
+        ExampleEmbed()
     }
     if (message.content.startsWith(`${prefix}rec`)){
         message.channel.send(randomRec())
@@ -212,9 +218,37 @@ function getQueue(serverQueue){
 }
 
 function randomRec(){
-    const recommendations = ['https://www.youtube.com/watch?v=M7afGQkooYI', 'https://www.youtube.com/watch?v=ySeXuAdt6Kk', 'https://www.youtube.com/watch?v=YiLK0tqhIx0']
+    // const recommendations = ['https://www.youtube.com/watch?v=M7afGQkooYI', 'https://www.youtube.com/watch?v=ySeXuAdt6Kk', 'https://www.youtube.com/watch?v=YiLK0tqhIx0']
     return recommendations[Math.floor(Math.random() * 3)]
 }
+
+
+
+function ExampleEmbed(){
+    // inside a command, event listener, etc.
+const exampleEmbed = new MessageEmbed()
+.setColor('#0099ff')
+.setTitle('Some title')
+.setURL('https://discord.js.org/')
+.setAuthor({ name: 'Some name', iconURL: 'https://i.imgur.com/AfFp7pu.png', url: 'https://discord.js.org' })
+.setDescription('Some description here')
+.setThumbnail('https://i.imgur.com/AfFp7pu.png')
+.addFields(
+    { name: 'Regular field title', value: 'Some value here' },
+    { name: '\u200B', value: '\u200B' },
+    { name: 'Inline field title', value: 'Some value here', inline: true },
+    { name: 'Inline field title', value: 'Some value here', inline: true },
+)
+.addField('Inline field title', 'Some value here', true)
+.setImage('https://i.imgur.com/AfFp7pu.png')
+.setTimestamp()
+.setFooter({ text: 'Some footer text here', iconURL: 'https://i.imgur.com/AfFp7pu.png' });
+
+return channel.send({ embeds: [exampleEmbed] });
+}
+
+
+
 
 
 

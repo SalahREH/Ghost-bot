@@ -11,4 +11,5 @@ node_modules
 #quitar calamardo/camalardo/server => secret commands
 #playlist
 #array of recs
-# 
+# skip y si hay un segundo valor es decir un numero que skipee esas veces
+
