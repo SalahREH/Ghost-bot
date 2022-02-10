@@ -18,26 +18,6 @@ client.on('disconnect', () => {
     console.log('Disconnect!');
 });
 
-let backticks = "```"
-let help = `
-${prefix}help => ehh... me imagino que ya sabras lo que hace
-
-${prefix}play "Song url you want to play" => reproduzco una cancion o la añado a la queue
-
-${prefix}stop => paro la cancion, limpio la queue y me piro del vc
-
-${prefix}skip => siguiente
-
-${prefix}rec => Recomendacion de la casa :wink:
-
-${prefix}playrec => Reproduzco la recomendacion de la casa
-
-${prefix}queue
-
-testing: ${prefix}volume "1-7.5"
-
-testing: ${prefix}move (*/ DO NOT USE /*)
-`
 
 //Eventlisteners
 
@@ -45,10 +25,10 @@ client.on('message', async message => {
     if (!message.content.startsWith(prefix)) return;
     const serverQueue = queue.get(message.guild.id);
 
-    if (message.content.startsWith(`${prefix}play ` || `${prefix}p `)) {
+    if (message.content.startsWith(`${prefix}play `) || message.content.startsWith(`${prefix}p `)) {
         execute(message, serverQueue)
         return
-    } else if (message.content.startsWith(`${prefix}skip`)) {
+    } else if (message.content.startsWith(`${prefix}skip` ) || message.content.startsWith(`${prefix}next`)) {
         skip(message, serverQueue)
         return
     } else if (message.content.startsWith(`${prefix}stop`)) {
@@ -76,7 +56,7 @@ client.on('message', async message => {
         return
     }
     if (message.content.startsWith(`${prefix}help`))  {
-        message.channel.send(`${backticks + help + backticks}`);
+        helpEmbed(message)
     }
     if (message.content.startsWith(`${prefix}server`)) {
         message.channel.send(message.guild.id);
@@ -218,7 +198,7 @@ function getQueue(serverQueue){
 }
 
 function randomRec(){
-    // const recommendations = ['https://www.youtube.com/watch?v=M7afGQkooYI', 'https://www.youtube.com/watch?v=ySeXuAdt6Kk', 'https://www.youtube.com/watch?v=YiLK0tqhIx0']
+    const recommendations = ['https://www.youtube.com/watch?v=M7afGQkooYI', 'https://www.youtube.com/watch?v=ySeXuAdt6Kk', 'https://www.youtube.com/watch?v=YiLK0tqhIx0']
     return recommendations[Math.floor(Math.random() * 3)]
 }
 
@@ -246,6 +226,36 @@ const exampleEmbed = new MessageEmbed()
 
 return message.channel.send(exampleEmbed);
 }
+
+
+function helpEmbed(message){
+    console.log();
+    const help = new MessageEmbed()
+    .setColor('#ffd29f')
+    .setTitle('All Commands Available')
+    // .setAuthor('Ghosty')
+    .setAuthor('Ghosty')
+    .setThumbnail('https://i.imgur.com/BnOG8uQ.jpg')
+    .addFields(
+        { name: `${prefix}help`, value: 'ehh... me imagino que ya sabras lo que hace' },
+        { name: `${prefix}play "Song url you want to play"`, value: 'ehh... me imagino que ya sabras lo que hace' },
+        { name: `${prefix}stop`, value: 'paro la cancion, limpio la queue y me piro del vc' },
+        { name: `${prefix}skip`, value: 'siguiente' },
+        { name: `${prefix}rec`, value: 'siguiente' },
+        { name: `${prefix}playrec`, value: 'siguiente' },
+        { name: `${prefix}queue`, value: 'siguiente' },
+        { name: `${prefix}???`, value: '3 secret commands xp' },
+        { name: '\u200B', value: '\u200B' },
+        {name: 'Commands in beta testing', value: '( DO NOT USE )'},
+        { name: '\u200B', value: '\u200B' },
+        { name: `${prefix}volume "1 - 7.5"`, value: 'change volume' },
+        { name: `${prefix}move`, value: 'move a song from a position to another' }
+    )
+
+
+    return message.channel.send(help)
+}
+
 
 
 
