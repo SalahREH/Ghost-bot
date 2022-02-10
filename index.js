@@ -59,7 +59,7 @@ client.on('message', async message => {
         return
     }
     if (message.content.startsWith(`${prefix}embed`)){
-        ExampleEmbed()
+        ExampleEmbed(message)
     }
     if (message.content.startsWith(`${prefix}rec`)){
         message.channel.send(randomRec())
@@ -224,7 +224,7 @@ function randomRec(){
 
 
 
-function ExampleEmbed(){
+function ExampleEmbed(message){
     // inside a command, event listener, etc.
 const exampleEmbed = new MessageEmbed()
 .setColor('#0099ff')
@@ -239,17 +239,17 @@ const exampleEmbed = new MessageEmbed()
     { name: 'Inline field title', value: 'Some value here', inline: true },
     { name: 'Inline field title', value: 'Some value here', inline: true },
 )
-.addField('Inline field title', 'Some value here', true)
+.addField('Inline field title', 'aaaaaaa', true)
 .setImage('https://i.imgur.com/AfFp7pu.png')
 .setTimestamp()
 .setFooter({ text: 'Some footer text here', iconURL: 'https://i.imgur.com/AfFp7pu.png' });
 
-return message.channel.send({ embeds: [exampleEmbed] });
+return message.channel.send(exampleEmbed);
 }
 
 
 
-
+// 
 
 
 client.login(process.env.DJS_TOKEN);
