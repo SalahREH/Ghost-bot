@@ -186,14 +186,20 @@ function getQueue(serverQueue){
     if(!serverQueue)
     return "No hay nada en la queue (￣▽￣*)ゞ"
 
-    let queueToView = []
-    serverQueue.songs.map((element, i)=>{
+    let queueToView = new MessageEmbed()
+    .setColor('#ffd29f')
+    .setTitle('Queue')
+    .addFields(
+        serverQueue.songs.map((element, i)=>{
         if (i == 0) {
-            queueToView.push(`**Now playing:** ${element.title}`)
-            return
+            // queueToView.push(`**Now playing:** ${element.title}`)
+            return { name: '\u200B', value: `**Now playing:** [${element.title}](${element.url})`}
+        } else {
+            return { name: '\u200B', value: `**${i}.** [${element.title}](${element.url})`}
         }
-        queueToView.push(`${i}. ${element.title}`)
     })
+    )
+    
     return queueToView
 }
 
@@ -205,6 +211,7 @@ function randomRec(){
 
 
 function ExampleEmbed(message){
+    let example = 'coconut'
     // inside a command, event listener, etc.
 const exampleEmbed = new MessageEmbed()
 .setColor('#0099ff')
@@ -214,9 +221,9 @@ const exampleEmbed = new MessageEmbed()
 .setDescription('Some description here')
 .setThumbnail('https://i.imgur.com/AfFp7pu.png')
 .addFields(
-    { name: 'Regular field title', value: 'Some value here' },
+    { name: 'Regular field title', value: '\u200B' },
     { name: '\u200B', value: '\u200B' },
-    { name: 'Inline field title', value: 'Some value here', inline: true },
+    { name: '\u200B', value: `**Now playing:** [${example}](https://i.imgur.com/AfFp7pu.png)`},
     { name: 'Inline field title', value: 'Some value here', inline: true },
 )
 .addField('Inline field title', 'aaaaaaa', true)
@@ -241,9 +248,9 @@ function helpEmbed(message){
         { name: `${prefix}play "Song url you want to play"`, value: 'ehh... me imagino que ya sabras lo que hace' },
         { name: `${prefix}stop`, value: 'paro la cancion, limpio la queue y me piro del vc' },
         { name: `${prefix}skip`, value: 'siguiente' },
-        { name: `${prefix}rec`, value: 'siguiente' },
-        { name: `${prefix}playrec`, value: 'siguiente' },
-        { name: `${prefix}queue`, value: 'siguiente' },
+        { name: `${prefix}rec`, value: 'Recomendacion de la casa :wink:' },
+        { name: `${prefix}playrec`, value: 'Reproduzco la recomendacion de la casa' },
+        { name: `${prefix}queue`, value: 'queue... ig?' },
         { name: `${prefix}???`, value: '3 secret commands xp' },
         { name: '\u200B', value: '\u200B' },
         {name: 'Commands in beta testing', value: '( DO NOT USE )'},
@@ -262,4 +269,4 @@ function helpEmbed(message){
 // 
 
 
-client.login(process.env.DJS_TOKEN);
+client.login('process.env.DJS_TOKEN');
