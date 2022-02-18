@@ -269,4 +269,4 @@ function helpEmbed(message){
 // 
 
 
-client.login('process.env.DJS_TOKEN');
+client.login(process.env.DJS_TOKEN);
