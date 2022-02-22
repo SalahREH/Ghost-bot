@@ -64,6 +64,12 @@ client.on('message', async message => {
         message.channel.send(getQueue(serverQueue))
         return
     }
+    if (message.content.startsWith(`${prefix}clearqueue`) || message.content.startsWith(`${prefix}cq`)) {
+        clearQueue(serverQueue)
+        message.channel.send("Queue limpiada")
+        return
+    }
+
     if (message.content.startsWith(`${prefix}leave`)) {
         const voiceChannel = message.member.voice.channel
         voiceChannel.leave()
@@ -259,6 +265,11 @@ function getQueue(serverQueue){
     
     return queueToView
 }
+
+function clearQueue(serverQueue) {
+    serverQueue = undefined;
+}
+
 
 function randomRec(){
     // const recommendations = ['https://www.youtube.com/watch?v=M7afGQkooYI', 'https://www.youtube.com/watch?v=ySeXuAdt6Kk', 'https://www.youtube.com/watch?v=YiLK0tqhIx0']
