@@ -1,13 +1,11 @@
 const Discord = require('discord.js');
-const {
-    prefix,
-    recommendations
-} = require('./config.json');
+const { prefix, recommendations, GOOGLE_API_KEY, listToDo } = require('./config.json');
 const { MessageEmbed } = require('discord.js');
-
+const simpleYT = require('simple-youtube-api');
 const ytdl = require('ytdl-core');
+const video = require('ffmpeg/lib/video');
 const client = new Discord.Client();
-
+const youtube = new simpleYT(process.env.DJS_GOOGLE_API_KEY);
 client.on('ready', () => {
     console.log('Ready!');
 });
@@ -22,11 +20,20 @@ client.on('disconnect', () => {
 //Eventlisteners
 
 client.on('message', async message => {
-    if (!message.content.startsWith(prefix)) return;
+    if (message.author.bot) return undefined;
+    if (!message.content.startsWith(`${prefix}`)) return undefined;
+    const args = message.content.split(' ');
+    const searchString = args.slice(1).join(' ')
+    let url = args[1] ? args[1].replace(/<(.+)>/g, '$1') : '' ;
+    console.log(url)
     const serverQueue = queue.get(message.guild.id);
 
+    
+
+
+
     if (message.content.startsWith(`${prefix}play `) || message.content.startsWith(`${prefix}p `)) {
-        execute(message, serverQueue)
+        execute(message, url, searchString)
         return
     } else if (message.content.startsWith(`${prefix}skip` ) || message.content.startsWith(`${prefix}next`)) {
         skip(message, serverQueue)
@@ -48,11 +55,25 @@ client.on('message', async message => {
         (async ()=>{
             let connection = await message.member.voice.channel.join()
         })()
-        message.channel.send(`?play ${randomRec()}`)
+        url = randomRec()
+
+        execute(message, url, searchString)
         return
     }
-    if (message.content.startsWith(`${prefix}queue`)) {
+    if (message.content.startsWith(`${prefix}queue`) || message.content.startsWith(`${prefix}q`)) {
         message.channel.send(getQueue(serverQueue))
+        return
+    }
+    if (message.content.startsWith(`${prefix}leave`)) {
+        const voiceChannel = message.member.voice.channel
+        voiceChannel.leave()
+        message.channel.send('aight')
+        return
+    }
+    if (message.content.startsWith(`${prefix}join`)) {
+        const voiceChannel = message.member.voice.channel
+        voiceChannel.join()
+        message.channel.send('aight')
         return
     }
     if (message.content.startsWith(`${prefix}help`))  {
@@ -67,13 +88,16 @@ client.on('message', async message => {
     if (message.content.startsWith(`${prefix}calamardo`)) {
         message.channel.send("https://i.pinimg.com/550x/5c/35/19/5c35191fc79090f966fe0e017cfac491.jpg");
     }
+    if (message.content.startsWith(`${prefix}list`)) {
+        message.channel.send(listToDo)
+    }
 });
 
 const queue = new Map();
 
 //Function to add a song
 
-async function execute(message, serverQueue) {
+async function execute(message, url, searchString) {
     const args = message.content.split(" ")
     const voiceChannel = message.member.voice.channel
     if(!voiceChannel) 
@@ -85,10 +109,41 @@ async function execute(message, serverQueue) {
         return message.channel.send('no tengo los permisos necesarios! ｡ﾟ･(>﹏<)･ﾟ｡')
     }
 
-    const songInfo = await ytdl.getInfo(args[1])
+    if (url.match(/^https?:\/\/(www.youtube.com|youtube.com)\/playlist(.*)/)) {
+        const playlist = await youtube.getPlaylist(url)
+        const videos = await playlist.getVideos()
+        message.channel.send(`Playlist: **${playlist.title}** ha sido añadida a la cola :D`)
+        for(const video of Object.values(videos)) {
+            const video2 = await youtube.getVideoByID(video.id)
+            await handleVideo(video2, message, voiceChannel, true)
+        }
+        return undefined;
+    } else {
+        try {
+            var video = await youtube.getVideo(url);
+        } catch (error) {
+            try {
+                var videos = await youtube.searchVideos(searchString, 1)
+                var video = await youtube.getVideoByID(videos[0].id)
+            } catch (err) {
+                console.log(err);
+                return message.channel.send('No he obtenido ningún resultado de busqueda (ﾉ≧ڡ≦) Teehee~!')
+            }
+        }
+
+        return handleVideo(video, message, voiceChannel);
+    }
+    return undefined;
+    
+}
+
+async function handleVideo(video, message, voiceChannel, playlist = false) {
+    const serverQueue = queue.get(message.guild.id)
+    // const songInfo = await ytdl.getInfo(args[1])
     const song = {
-        title: songInfo.videoDetails.title,
-        url: songInfo.videoDetails.video_url
+        id: video.id,
+        title: video.title,
+        url: `https://www.youtube.com/watch?v=${video.id}`
     }
     if (!serverQueue) {
         const queueContruct = {
@@ -114,9 +169,11 @@ async function execute(message, serverQueue) {
     } else {
         serverQueue.songs.push(song)
         console.log(serverQueue.songs);
-        return message.channel.send(`${song.title} añadida a la lista de reproducción 
+        if(playlist) return undefined;
+        else message.channel.send(`${song.title} añadida a la lista de reproducción 
 (〜￣▽￣)〜	`)
     }
+    return undefined;
 }
 
 function play(guild, song) {
@@ -204,7 +261,7 @@ function getQueue(serverQueue){
 }
 
 function randomRec(){
-    const recommendations = ['https://www.youtube.com/watch?v=M7afGQkooYI', 'https://www.youtube.com/watch?v=ySeXuAdt6Kk', 'https://www.youtube.com/watch?v=YiLK0tqhIx0']
+    // const recommendations = ['https://www.youtube.com/watch?v=M7afGQkooYI', 'https://www.youtube.com/watch?v=ySeXuAdt6Kk', 'https://www.youtube.com/watch?v=YiLK0tqhIx0']
     return recommendations[Math.floor(Math.random() * 3)]
 }
 

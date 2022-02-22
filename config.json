@@ -1,4 +1,6 @@
 {
-    "prefix": "?",
-    "recommendations" : "['https://www.youtube.com/watch?v=M7afGQkooYI', 'https://www.youtube.com/watch?v=ySeXuAdt6Kk', 'https://www.youtube.com/watch?v=YiLK0tqhIx0']"
+    "prefix" : "?",
+    "recommendations" : ["https://www.youtube.com/watch?v=M7afGQkooYI", "https://www.youtube.com/watch?v=ySeXuAdt6Kk", "https://www.youtube.com/watch?v=YiLK0tqhIx0"],
+    "listToDo" : ["forward and rewind", "segundo valor para skip", "es decir un numero que skipee esas veces", "move", "spotify", "loop/loopqueue", "playlist"]
+
 }
