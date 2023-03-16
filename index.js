@@ -88,9 +88,6 @@ client.on('message', async message => {
     if (message.content.startsWith(`${prefix}server`)) {
         message.channel.send(message.guild.id);
     }
-    if (message.content.startsWith(`${prefix}camalardo`)) {
-        message.channel.send("https://i.imgur.com/twFOqNw.jpg");
-    }
     if (message.content.startsWith(`${prefix}calamardo`)) {
         message.channel.send("https://i.pinimg.com/550x/5c/35/19/5c35191fc79090f966fe0e017cfac491.jpg");
     }
@@ -231,7 +228,7 @@ function move(message, serverQueue){
     const args = message.content.split(" ")
     let positionOfSong = args[1]
     let positionToMove = args[2]
-    if(!positionToMove || !positionOfSong) return message.channel.send('Escribe bien cazurro')
+    if(!positionToMove || !positionOfSong) return message.channel.send('Escribe bien (∩｀-´)⊃')
     if(serverQueue) return message.channel.send(serverQueue.songs)
     moveSong(serverQueue.songs, positionOfSong, positionToMove)
     console.log(serverQueue.songs)
@@ -308,7 +305,6 @@ function helpEmbed(message){
     const help = new MessageEmbed()
     .setColor('#ffd29f')
     .setTitle('All Commands Available')
-    // .setAuthor('Ghosty')
     .setAuthor('Ghosty')
     .setThumbnail('https://i.imgur.com/BnOG8uQ.jpg')
     .addFields(
